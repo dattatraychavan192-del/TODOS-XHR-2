@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./assets/CSS/style.css" />
+   
+
+    <title>User Dashboard</title>
+  </head>
+  <body class="font-awesome">
+    <div class="container">
+    <div class="row">
+      <div class="col-md-4 offset-md-4 mt-4">
+        <div class="card shadow  border border-danger">
+          <div class="card-header">
+             <div class="card-header bg-warning text-black">
+                <h4 class="mb-0 text-center">
+                  <i class="fas fa-user-plus"></i>
+                  Add New User
+                </h4>
+              </div>
+               </div>
+
+              <div class="card-body">
+              <form  id="userCard">
+                  <div class="form-group " >
+                    <input mt-2
+                      type="text"
+                      class="form-control"
+                      placeholder="Name"
+                      id="name"
+                    />
+                  </div>
+                  <div class="form-group "> 
+                    <input mt-2
+                      type="text"
+                      id="username"
+                      class="form-control"
+                      placeholder="User Name"
+                    />
+                  </div>
+                  <div class="form-group ">
+                    <input mt-2
+                      type="text"
+                      class="form-control"
+                      placeholder="Email"
+                      id="email"
+                    />
+                  </div>
+                  <div class="form-group ">
+                    <input mt-2
+                      type="text"
+                      id="address"
+                      class="form-control"
+                      placeholder="Address"
+                    />
+                  </div>
+                  <div class="form-group ">
+                    <input mt-2
+                      type="text"
+                      id="phone"
+                      class="form-control"
+                      placeholder="phone"
+                    />
+                  </div>
+                  <button class="btn btn-primary btn-block mt-2" id="editBtn">Add User</button>
+                <button type="button" class="btn btn-primary mt-2 d-none btn-block" id="updateBtn">Update User</buttton>
+                </div>
+              </form>
+            </div>
+        </div>
+      </div>
+     
+      <div class="row">
+        <div class="col-md-12 mt-2">
+          <div class="card bg-secondary text-white">
+            <div class="card-body">
+              <div class="table-responsive border rounded">
+                  <table class="  mt-2 table  table-bordered align-middle text-center">
+          <thead >
+            <tr >
+              <th>No</th>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>number</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id="stdContainer" class="text-white">
+            <!-- <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+
+            </tr> -->
+          </tbody>
+        </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/JS/app.js"></script>
+  </body>
+</html>
