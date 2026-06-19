@@ -15,7 +15,19 @@ const stdContainer = document.getElementById("stdContainer");
 
 let userArr = [];
 
+function snackbar(msg, icon) {
+  swal.fire({
+    title: msg,
+    icon: icon,
+    timer: 2000,
+  });
+}
+
+const spinner = document.getElementById("spinner");
+
 function fetchUser(ele) {
+  spinner.classList.remove("d-none");
+
   let xhr = new XMLHttpRequest();
   let postURL = `${baseURL}/users`;
   xhr.open("GET", postURL);
@@ -24,7 +36,8 @@ function fetchUser(ele) {
     if (xhr.status >= 200 && xhr.status <= 299) {
       userArr = JSON.parse(xhr.response);
 
-      creatCard(userArr);
+      creatCard(userArr.reverse());
+      spinner.classList.add("d-none");
     }
   };
 }
@@ -55,6 +68,7 @@ function creatCard(ele) {
 
 function onSubmitHandalar(ele) {
   ele.preventDefault();
+  spinner.classList.remove("d-none");
 
   let newObj = {
     name: name.value,
@@ -71,8 +85,9 @@ function onSubmitHandalar(ele) {
   xhr.send(JSON.stringify(newObj));
   xhr.onload = function () {
     if (xhr.status >= 200 && xhr.status <= 299) {
-      this.response = JSON.parse(xhr.response);
+      let response = JSON.parse(xhr.response);
       let tr = document.createElement("tr");
+      tr.id = response.id;
       tr.innerHTML = `
          <td>${userArr.length}</td>
               <td>${newObj.name}</td>
@@ -85,17 +100,19 @@ function onSubmitHandalar(ele) {
       `;
 
       stdContainer.prepend(tr);
-    }
+      userCard.reset();
+      spinner.classList.add("d-none");
 
-    swal.fire({
-      title: "User Add Succssefully",
-      icon: "success",
-      timer: 2000,
-    });
+      snackbar(`User Add Succssefully`);
+    } else {
+      cl("something went wrong");
+    }
   };
 }
 
 function onedit(ele) {
+  spinner.classList.remove("d-none");
+
   let editId = ele.closest("tr").id;
   let editURL = `${baseURL}/users/${editId}`;
   localStorage.setItem("editId", editId);
@@ -110,16 +127,28 @@ function onedit(ele) {
       name.value = editObj.name;
       username.value = editObj.username;
       email.value = editObj.email;
-      address.value = editObj.address;
+      address.value = editObj.address.city;
       phone.value = editObj.phone;
 
       editBtn.classList.add("d-none");
       updateBtn.classList.remove("d-none");
+
+      userCard.classList.remove("d-none");
+      spinner.classList.add("d-none");
+
+      userCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    } else {
+      snackbar("something went wrong", "error");
     }
   };
 }
 
 function onUpdateHandalar(ele) {
+  spinner.classList.remove("d-none");
+
   let updateId = localStorage.getItem("editId");
 
   let updObj = {
@@ -146,48 +175,58 @@ function onUpdateHandalar(ele) {
               <td>${updObj.email}</td>
               <td>${updObj.address}</td>
               <td>${updObj.phone}</td>
-              <td><i class="fa-solid fa-2x  text-primary fa-pen-to-square" onclick = "onedit(this)"></i></td>
-              <td><i class="fa-solid fa-2x text-danger fa-trash" onclick = "ondelete(this)"></i></td>
+              <td><i class="fa-solid fa-2x  cursor-pointer text-primary fa-pen-to-square" onclick = "onedit(this)"></i></td>
+              <td><i class="fa-solid fa-2x cursor-pointer text-danger fa-trash" onclick = "ondelete(this)"></i></td>
     
     `;
       editBtn.classList.remove("d-none");
       updateBtn.classList.add("d-none");
+      spinner.classList.add("d-none");
+
+      snackbar("User update successfully", "success");
+      tr.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
     userCard.reset();
-    swal.fire({
-      title: "User Info Update Succssefully",
-      icon: "success",
-      timer: 2000,
-    });
   };
 }
 
 function ondelete(ele) {
-  let deletId = ele.closest("tr");
+  spinner.classList.remove("d-none");
+
+  let deleteId = ele.closest("tr").id;
 
   Swal.fire({
     title: "Are you sure?",
     text: "You want to delete it!",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
     confirmButtonText: "Yes, delete it!",
   }).then((result) => {
     if (result.isConfirmed) {
-      let deletURL = `${baseURL}/users/${deletId}`;
-
+      let deleteURL = `${baseURL}/users/${deleteId}`;
       let xhr = new XMLHttpRequest();
-      xhr.open("DELETE", deletURL);
+      xhr.open("DELETE", deleteURL);
       xhr.send(null);
+
       xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status <= 299) {
+          userArr = userArr.filter((user) => user.id != deleteId);
           ele.closest("tr").remove();
+          spinner.classList.add("d-none");
+
+          userArr.pop();
+          let rows = document.querySelectorAll("#stdContainer tr");
+
+          rows.forEach((row, i) => {
+            row.cells[0].innerText = rows.length - i;
+          });
         }
       };
     }
   });
 }
-
 userCard.addEventListener("submit", onSubmitHandalar);
 updateBtn.addEventListener("click", onUpdateHandalar);
